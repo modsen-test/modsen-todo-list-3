@@ -1,15 +1,15 @@
 import React, {useState} from "react";
 
-import {StyledButton, Wrapper} from "./styles";
+import {StyledButton, StyledInput, Wrapper} from "./styles";
 
 import Loupe from "@/assets/images/loupe.svg?react";
 import {Card} from "@/components/Card";
-import {Input} from "@/components/Input";
 import {useLazyGetUserQuery} from "@/store/api/github.rtk";
 
 
 export const FindProfile = () => {
     const [name, setName] = useState('');
+    const [quake, setQuake] = useState(false);
     const [requestUser, {data, isSuccess, isError}] = useLazyGetUserQuery();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,13 +17,17 @@ export const FindProfile = () => {
     }
 
     const handleClick = () => {
+        if (!name) {
+            setTimeout(() => setQuake(false), 500);
+            return setQuake(true);
+        }
         requestUser(name)
     };
 
     return (
         <Wrapper>
             <h3>GitHub info</h3>
-            <Input placeholder="Search name..." value={name} onChange={handleChange}/>
+            <StyledInput $quake={quake} placeholder="Search name..." value={name} onChange={handleChange}/>
             <StyledButton onClick={handleClick}>
                 <Loupe/>
             </StyledButton>
